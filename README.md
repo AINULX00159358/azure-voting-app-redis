@@ -52,9 +52,8 @@ THIS will ovveride .kube/config
 In Azure DevOps project, Create a new Service Connection
 - Use KubeConfig
 - Add KubeConig from the file .kube/config
-- 
 - Accept-untrusted certificate as True
-- Provide a Service Connection Name
+- Provide a Service Connection Name  ( myAKSsvcConnName )
 - Select Verify
 
 used the same service connection for Azure Kubernetes task in Azure DevOps
@@ -72,10 +71,19 @@ create a Azure Pipeline Deployment File
       displayName: Azure voting app
       inputs:
         connectionType: Kubernetes Service Connection
-        kubernetesServiceEndpoint: <name of new service connection for Azure cluster>
+        kubernetesServiceEndpoint: myAKSsvcConnName
         command: apply
         arguments: -f azure-vote-all-in-one-redis.yaml
 
 Use Azure Pipeline Wizard to deploy using custom YAML file
 
-choose the new file.
+choose the new file , and Run the Pipeline 
+
+### Check the deployment
+
+    x002332323232 [ ~ ]$ kubectl get deployment
+    NAME               READY   UP-TO-DATE   AVAILABLE   AGE
+    azure-vote-back    1/1     1            1           64m
+    azure-vote-front   1/1     1            1           64m
+    x232323232323 [ ~ ]$ 
+
