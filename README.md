@@ -29,3 +29,53 @@ provided by the bot. You will only need to do this once across all repos using o
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
 For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
 contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+
+## To Deploy in Azure Kubernets Cluster
+
+https://stackoverflow.com/questions/75672941/error-in-creating-service-connection-in-azure-devop-to-azure-kubernetes-service
+This is because Kubernets Cluster is created using 1.26 which do not create Secrets for service Account.
+
+
+### Use Cluster Configuration from Azure Portal
+enabled Azure AD and Azure RBAC
+
+
+a user as a Kubernetes Cluster Admin :
+- Add role for Service Cluster Admin Role
+- Add role for Kubernets Service RBAC Role
+- Owner
+
+validate by running
+az aks get-credentials --resource-group <resource group> --name <clusterName> --admin
+THIS will ovveride .kube/config
+
+In Azure DevOps project, Create a new Service Connection
+- Use KubeConfig
+- Add KubeConig from the file .kube/config
+- 
+- Accept-untrusted certificate as True
+- Provide a Service Connection Name
+- Select Verify
+
+used the same service connection for Azure Kubernetes task in Azure DevOps
+- new service connection for kubernets created 
+
+create a Azure Pipeline Deployment File
+
+    trigger: none
+
+    pool:
+      vmImage: ubuntu-latest
+
+    steps:
+    - task: Kubernetes@1
+      displayName: Azure voting app
+      inputs:
+        connectionType: Kubernetes Service Connection
+        kubernetesServiceEndpoint: <name of new service connection for Azure cluster>
+        command: apply
+        arguments: -f azure-vote-all-in-one-redis.yaml
+
+Use Azure Pipeline Wizard to deploy using custom YAML file
+
+choose the new file.
