@@ -14,5 +14,6 @@ steps:
   inputs:
     action: 'deploy'
     kubernetesServiceConnection: 'ainhab-serviceaccount-connection'
+    kubernetesServiceEndpoint: 'ainhab-serviceaccount-connection'
     namespace: 'default'
     manifests: 'azure-vote-all-in-one-redis.yaml'
