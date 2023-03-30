@@ -6,8 +6,13 @@ pool:
 steps:
 - task: Kubernetes@1
   displayName: Azure voting app
+  # inputs:
+  #   connectionType: Kubernetes Service Connection
+  #   kubernetesServiceEndpoint: ainhabAKSConnection
+  #   command: apply
+  #   arguments: -f - task: KubernetesManifest@0
   inputs:
-    connectionType: Kubernetes Service Connection
-    kubernetesServiceEndpoint: ainhabAKSConnection
-    command: apply
-    arguments: -f azure-vote-all-in-one-redis.yaml
+    action: 'deploy'
+    kubernetesServiceConnection: 'ainhab-serviceaccount-connection'
+    namespace: 'default'
+    manifests: 'azure-vote-all-in-one-redis.yaml'
